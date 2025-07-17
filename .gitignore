@@ -52,6 +52,6 @@ Content/
 *.vspscc
 *.vssscc
 
-src/Api/uploads
+src/API/uploads
 .env
 GEMINI.md
