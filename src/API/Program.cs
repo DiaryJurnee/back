@@ -1,15 +1,15 @@
+using API.Dependency;
+using API.Modules;
+using API.Modules.Auth.Scheme;
+using API.Modules.Filters;
+using API.Modules.Middlewares;
 using API.Modules.Route.Filter;
-using Application;
-using Infrastructure;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddControllers();
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddApplication(builder.Configuration);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -22,6 +22,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers(options =>
 {
     options.Conventions.Add(new RouteTokenTransformerConvention(new KebabCaseParameterTransformer()));
+    options.Filters.Add<ApiResultFilter>();
 });
 
 builder.Services.AddCors(c =>
@@ -32,11 +33,20 @@ builder.Services.AddCors(c =>
         .AllowAnyMethod());
 });
 
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.Inject(builder.Configuration);
+
+builder.Services.AddAuthenticationScheme(builder.Configuration);
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionToErrorMiddleware>();
+
 app.MapOpenApi();
+
+app.ConfigureStaticFiles();
 
 app.UseHttpsRedirection();
 
@@ -51,7 +61,7 @@ app.MapScalarApiReference("/", options =>
     }
 });
 
-// await app.InitialiseDb();
+app.UseAuth();
 
 app.MapControllers();
 
