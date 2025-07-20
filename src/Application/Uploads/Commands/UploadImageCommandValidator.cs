@@ -7,30 +7,14 @@ namespace Application.Uploads.Commands;
 public class UploadImageCommandValidator : AbstractValidator<UploadImageCommand>
 {
     private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
-    private const long megabyte = 1024 * 1024;
-    private const long MaxFileSize = 3 * megabyte;
+    private const long _megabyte = 1024 * 1024;
+    private const long _maxFileSize = 3 * _megabyte;
 
     public UploadImageCommandValidator()
     {
         RuleFor(x => x.File)
-            .Must(file => file.Length <= MaxFileSize)
+            .Must(file => file.Length <= _maxFileSize)
             .WithMessage("File size limit exceeded");
-
-        RuleFor(x => x.Directory)
-            .Custom((directory, context) =>
-            {
-                const string parameterName = nameof(directory);
-
-                if (!Directory.Exists(directory))
-                {
-                    context.AddFailure(new ValidationFailure(
-                        propertyName: parameterName,
-                        errorMessage: string.Empty)
-                    {
-                        CustomState = ErrorContent.Create("Directory not found", parameterName)
-                    });
-                }
-            });
 
         RuleFor(x => x.Extension)
             .Custom((extension, context) =>

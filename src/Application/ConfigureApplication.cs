@@ -1,7 +1,6 @@
 using System.Reflection;
 using Application.Common;
 using Application.Common.Behaviours;
-using CSharpFunctionalExtensions;
 using FluentValidation;
 using Mediator;
 using Mediator.Interfaces;
@@ -16,7 +15,7 @@ public static class ConfigureApplication
     {
         services.AddQueues();
 
-        services.AddMediator(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()).AsSingleton());
+        services.AddMediator(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()).AsScoped());
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), ServiceLifetime.Scoped, includeInternalTypes: true);
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));

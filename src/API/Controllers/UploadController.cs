@@ -17,7 +17,7 @@ public class UploadController(ISender sender) : ControllerBase
         UploadImageCommand command = new()
         {
             File = file,
-            Directory = Configure.UploadsDir,
+            Directory = Configure.ImagesDir,
             Extension = Path.GetExtension(file.FileName).ToLowerInvariant()
         };
 
@@ -31,7 +31,8 @@ public class UploadController(ISender sender) : ControllerBase
     {
         DeleteFileCommand command = new()
         {
-            Path = Path.Combine(Configure.UploadsDir, fileName)
+            FileName = fileName,
+            Directory = Configure.ImagesDir
         };
 
         var result = await sender.Send(command, cancellationToken);

@@ -8,17 +8,27 @@ namespace Application.Uploads.Commands;
 
 public class DeleteFileCommand : IRequest<Result<Success, Error>>
 {
-    // the main is file name
-    public required string Path { get; init; }
+    // the main is fileName
+    public required string FileName { get; init; }
+
+    public required string Directory { get; init; }
 }
 
 public class DeleteFileCommandHandler(AccessQueue accessQueue) : IRequestHandler<DeleteFileCommand, Result<Success, Error>>
 {
     public async Task<Result<Success, Error>> Handle(DeleteFileCommand request, CancellationToken cancellationToken)
     {
-        await accessQueue.ExecuteAsync(request.Path, () =>
+        string path = Path.Combine(request.Directory, request.FileName);
+
+        if (!File.Exists(path))
         {
-            File.Delete(request.Path);
+            const string parameterName = "fileName";
+            return Error.Create(StatusCodes.Status404NotFound, ErrorContent.Create("File not found", parameterName));
+        }
+
+        await accessQueue.ExecuteAsync(path, () =>
+        {
+            File.Delete(path);
             return Task.CompletedTask;
         }, cancellationToken);
 

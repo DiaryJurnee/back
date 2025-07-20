@@ -1,6 +1,7 @@
 using Application.Common.Queues;
 using Application.Common.Templates.Response;
 using CSharpFunctionalExtensions;
+using Domain.Users;
 using Mediator.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -17,12 +18,18 @@ public class UploadImageCommandHandler(AccessQueue accessQueue) : IRequestHandle
 {
     public async Task<Result<Success, Error>> Handle(UploadImageCommand request, CancellationToken cancellationToken)
     {
+        if (!Directory.Exists(request.Directory))
+        {
+            const string parameterName = "directory";
+            return Error.Create(StatusCodes.Status404NotFound, ErrorContent.Create("Directory not found", parameterName));
+        }
+
         var fileName = $"{Guid.NewGuid()}-{Guid.NewGuid()}{request.Extension}";
         var filePath = Path.Combine(request.Directory, fileName);
 
         await accessQueue.ExecuteAsync(fileName, async () =>
         {
-            using var stream = new FileStream(filePath, FileMode.Create);
+            await using FileStream stream = new(filePath, FileMode.Create);
             await request.File.CopyToAsync(stream, cancellationToken);
         }, cancellationToken);
 
