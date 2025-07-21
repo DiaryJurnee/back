@@ -1,5 +1,7 @@
+using Domain.Clusters;
 using Domain.SystemRoles;
 using Domain.UsersWorkspaces;
+using Domain.Workspaces;
 
 namespace Domain.Users;
 
@@ -18,7 +20,9 @@ public class User
     public SystemRoleId RoleId { get; private set; }
     public SystemRole? Role { get; private set; }
 
-    public IEnumerable<UserWorkspace> Workspaces { get; } = [];
+    public IEnumerable<Workspace> Workspaces { get; } = [];
+    public IEnumerable<UserWorkspace> UsersWorkspaces { get; } = [];
+    public IEnumerable<Cluster> Clusters { get; } = [];
 
     public void UpdateDetails(string firstName, string lastName, SystemRoleId roleId) =>
         (FirstName, LastName, RoleId, Role, UpdatedAt) = (firstName, lastName, roleId, null, DateTime.UtcNow);

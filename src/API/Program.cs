@@ -1,6 +1,7 @@
 using API.Dependency;
 using API.Modules;
 using API.Modules.Auth.Scheme;
+using API.Modules.Database;
 using API.Modules.Filters;
 using API.Modules.Middlewares;
 using API.Modules.Route.Filter;
@@ -66,6 +67,8 @@ app.UseAuth();
 app.MapControllers();
 
 app.UseCors("AllowOrigin");
+
+await app.InitializeDb();
 
 await app.RunAsync();
 

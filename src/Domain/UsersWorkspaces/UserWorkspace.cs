@@ -15,7 +15,10 @@ public class UserWorkspace
             (workspaceId, userId, DateTime.UtcNow, DateTime.UtcNow, canReadAll, canCreate, canUpdate, canDelete, canInviteOtherUser);
 
     public WorkspaceId WorkspaceId { get; }
+    public Workspace? Workspace { get; }
     public UserId UserId { get; }
+    public User? User { get; }
+
     public DateTime CreatedAt { get; }
     public DateTime UpdatedAt { get; private set; }
     public bool CanReadAll { get; private set; }

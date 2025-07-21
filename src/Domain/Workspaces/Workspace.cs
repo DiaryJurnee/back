@@ -1,3 +1,4 @@
+using Domain.Clusters;
 using Domain.Users;
 using Domain.UsersWorkspaces;
 
@@ -16,6 +17,7 @@ public class Workspace
     public User? Owner { get; }
 
     public IEnumerable<UserWorkspace> Users { get; } = [];
+    public IEnumerable<Cluster> Clusters { get; } = [];
 
     public static Workspace New(WorkspaceId id, string name, UserId ownerId) =>
         new(id, name, ownerId);
