@@ -1,5 +1,6 @@
 using Domain.Clusters;
 using Domain.Days;
+using Infrastructure.Constraints;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,6 +15,7 @@ public class DayConfiguration : IEntityTypeConfiguration<Day>
         builder.Property(x => x.ClusterId).IsRequired().HasConversion(x => x.Value, x => ClusterId.New(x));
 
         builder.Property(x => x.Title).IsRequired().HasColumnType("varchar(255)");
+        builder.Property(x => x.CreatedAt).IsRequired().HasConversion(new DateTimeUtcConverter());
 
         builder.HasOne(x => x.Cluster)
             .WithMany(x => x.Days)

@@ -1,3 +1,10 @@
 namespace Application.Common.Settings.Jwt;
 
-public record JwtSettings(string Issuer, string Audience, string SecretKey, string SecurityAlgorithms, int ExpiryMinutes);
+public record JwtSettings
+{
+    public string Issuer { get; set; } = null!;
+    public string Audience { get; set; } = null!;
+    public string SecretKey { get; set; } = null!;
+    public string SecurityAlgorithms { get; set; } = null!;
+    public int ExpiryMinutes { get; set; } = 0;
+}

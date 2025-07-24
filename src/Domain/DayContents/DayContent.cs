@@ -9,8 +9,10 @@ public class DayContent
 
     public DayContentId Id { get; }
     public string Text { get; private set; }
+    // probably better to use TimeSpan
     public DateTime? StartAt { get; private set; }
     public DateTime? EndAt { get; private set; }
+    //
     public DateTime CreatedAt { get; }
     public DateTime UpdatedAt { get; private set; }
 

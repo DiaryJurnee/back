@@ -5,8 +5,6 @@ namespace API.Modules.Middlewares;
 
 public class ExceptionToErrorMiddleware(RequestDelegate next)
 {
-    public const string UnhandledExceptionKey = "server";
-
     public async Task InvokeAsync(HttpContext context)
     {
         try
@@ -15,7 +13,7 @@ public class ExceptionToErrorMiddleware(RequestDelegate next)
         }
         catch (Exception ex)
         {
-            Error error = Error.Create(StatusCodes.Status500InternalServerError, ErrorContent.Create("Internal server error: {0}", UnhandledExceptionKey, ex.Message));
+            Error error = Error.Create(StatusCodes.Status500InternalServerError, ErrorContent.Create("Internal server error: {0}", Error.ServerErrorsKey, ex.Message));
 
             context.Response.StatusCode = error.StatusCode;
             context.Response.ContentType = "application/json";

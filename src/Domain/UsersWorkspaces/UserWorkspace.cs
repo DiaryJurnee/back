@@ -27,8 +27,8 @@ public class UserWorkspace
     public bool CanDelete { get; private set; }
     public bool CanInviteOtherUser { get; private set; }
 
-    public static UserWorkspace New(WorkspaceId workspaceId, UserId userId) =>
-        new(workspaceId, userId);
+    public static UserWorkspace New(WorkspaceId workspaceId, UserId userId, bool canReadAll, bool canCreate, bool canUpdate, bool canDelete, bool canInviteOtherUser) =>
+        new(workspaceId, userId, canReadAll, canCreate, canUpdate, canDelete, canInviteOtherUser);
 
     public void UpdateDetails(bool canReadAll, bool canCreate, bool canUpdate, bool canDelete, bool canInviteOtherUser) =>
         (UpdatedAt, CanReadAll, CanCreate, CanUpdate, CanDelete, CanInviteOtherUser) = (DateTime.UtcNow, canReadAll, canCreate, canUpdate, canDelete, canInviteOtherUser);

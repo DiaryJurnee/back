@@ -6,7 +6,9 @@ public static partial class Configure
 {
     public static string UploadsDir { get; private set; } = "";
 
-    public static string ImagesDir => Path.Combine(UploadsDir, "Images");
+    private static string? _imagesDir;
+    public static string ImagesDir => _imagesDir ??= Path.Combine(UploadsDir, "Images");
+
     public static IApplicationBuilder ConfigureStaticFiles(this IApplicationBuilder app)
     {
         UploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");

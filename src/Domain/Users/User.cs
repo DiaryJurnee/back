@@ -20,12 +20,15 @@ public class User
     public SystemRoleId RoleId { get; private set; }
     public SystemRole? Role { get; private set; }
 
-    public IEnumerable<Workspace> Workspaces { get; } = [];
-    public IEnumerable<UserWorkspace> UsersWorkspaces { get; } = [];
-    public IEnumerable<Cluster> Clusters { get; } = [];
+    public ICollection<Workspace> Workspaces { get; } = [];
+    public ICollection<UserWorkspace> UsersWorkspaces { get; } = [];
+    public ICollection<Cluster> Clusters { get; } = [];
 
-    public void UpdateDetails(string firstName, string lastName, SystemRoleId roleId) =>
-        (FirstName, LastName, RoleId, Role, UpdatedAt) = (firstName, lastName, roleId, null, DateTime.UtcNow);
+    public void UpdateDetails(string firstName, string lastName) =>
+        (FirstName, LastName, UpdatedAt) = (firstName, lastName, DateTime.UtcNow);
+
+    public void UpdateRole(SystemRoleId roleId) =>
+        (RoleId, Role) = (roleId, null);
 
     public static User New(UserId id, string firstName, string lastName, string email, SystemRoleId roleId) =>
         new(id, firstName, lastName, email, roleId);

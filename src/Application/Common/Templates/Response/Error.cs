@@ -5,6 +5,8 @@ namespace Application.Common.Templates.Response;
 
 public class Error : IResponse
 {
+    public const string ServerErrorsKey = "server";
+
     private int _statusCode = StatusCodes.Status500InternalServerError;
 
     [JsonPropertyName("errors")]

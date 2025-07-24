@@ -17,11 +17,12 @@ public class ApiResultFilter : IResultFilter
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Result<,>))
             {
                 var isSuccessProp = type.GetProperty("IsSuccess");
-                var valueProp = type.GetProperty("Value");
-                var errorProp = type.GetProperty("Error");
 
                 if (isSuccessProp?.GetValue(value) is bool isSuccess)
                 {
+                    var valueProp = type.GetProperty("Value");
+                    var errorProp = type.GetProperty("Error");
+
                     var resultData = isSuccess ? valueProp?.GetValue(value) : errorProp?.GetValue(value);
 
                     if (resultData is IResponse response)

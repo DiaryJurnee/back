@@ -12,11 +12,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).HasConversion(x => x.Value, x => UserId.New(x));
+        builder.Property(x => x.RoleId).IsRequired().HasConversion(x => x.Value, x => SystemRoleId.New(x));
 
         builder.Property(x => x.FirstName).IsRequired().HasColumnType("varchar(255)");
         builder.Property(x => x.LastName).IsRequired().HasColumnType("varchar(255)");
         builder.Property(x => x.Email).IsRequired().HasColumnType("varchar(255)");
-        builder.Property(x => x.RoleId).IsRequired().HasConversion(x => x.Value, x => SystemRoleId.New(x));
         builder.Property(x => x.CreatedAt).IsRequired().HasConversion(new DateTimeUtcConverter());
         builder.Property(x => x.UpdatedAt).IsRequired().HasConversion(new DateTimeUtcConverter());
 

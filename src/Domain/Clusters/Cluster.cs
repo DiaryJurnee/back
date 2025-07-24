@@ -18,7 +18,7 @@ public class Cluster
     public UserId OwnerId { get; }
     public User? Owner { get; }
 
-    public IEnumerable<Day> Days { get; } = [];
+    public ICollection<Day> Days { get; } = [];
 
     public static Cluster New(ClusterId id, string name, WorkspaceId workspaceId, UserId ownerId) =>
         new(id, name, workspaceId, ownerId);
