@@ -1,0 +1,37 @@
+name: Deploy ASP.NET App
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    environment: Secrets
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Copy to VPS via SSH
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "."
+          target: "~/jurnee"
+
+      - name: Run Docker Compose on Server
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/jurnee
+            docker-compose down --volumes --rmi all
+            docker-compose build --no-cache
+            docker-compose up -d

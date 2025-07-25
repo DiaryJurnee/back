@@ -1,38 +1,19 @@
 services:
-  back-db:
-    image: postgres:latest
-    container_name: db
+  back-api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     environment:
-      POSTGRES_USER: jurnee
-      POSTGRES_PASSWORD: 12345
-      POSTGRES_DB: jurnee
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal;Port=5432;Database=jurnee;Username=postgres;Password=qwerty-1;
+      - ASPNETCORE_ENVIRONMENT=Production
+      - JwtSettings__Issuer=Issuer
+      - JwtSettings__Audience=Audience
+      - JwtSettings__SecretKey=pD9xK8LcJd7MhK8qK9J8LcJd7MhK8qK9J8LcJd7MhK8qK9J8LcJd7MhK8qK9J8LcJd7MhK8qK9J8LcJd7MhK8qLcJd7MhK8qK9J8LcJd7MhK8qK9J8LcJd7MhK8qK9J8LcJd7LcJd7MhK8qK9J8LcJd7MhK8qK9J8LcJd7MhK8qK9J8LcJd7
+      - JwtSettings__SecurityAlgorithms=HS256
+      - JwtSettings__ExpiryMinutes=60
+      - Authorization__Google__ClientId=796501347616-e0rdsse4bvg6oahbbolk0io47upgass7.apps.googleusercontent.com
     ports:
-      - "5555:5432"
+      - "4312:8080"
     volumes:
-      - api_db_data:/var/lib/postgresql/data
-
-# back-api:
-#   container_name: api
-#   build:
-#     context: .
-#     dockerfile: ./Dockerfile
-#   environment:
-#     - ConnectionStrings__DefaultConnection=Server=back-db;Port=5432;Database=softserve;Username=softserve;Password=12345;
-#     - ASPNETCORE_ENVIRONMENT=Production
-#     - AllowSeeders=true
-#     - JwtSettings__Issuer=Issuer
-#     - JwtSettings__Audience=Audience
-#     - JwtSettings__SecretKey=A5xkf4bHepZ?F7NNrAzWkNjXK@75#SX+
-#     - JwtSettings__SecurityAlgorithms=HS256
-#     - JwtSettings__ExpiryMinutes=60
-#     - HashSettings__Salt=$$2a$$12$$eImiTXuWVxfM37uY4JANjQSuper_Secret_Salt
-#   depends_on:
-#     - back-db
-#   ports:
-#     - "4312:8080"
-#   volumes:
-#     - ./src/Api/uploads:/app/uploads
-
-volumes:
-  api_db_data:
-    name: api_db_data
+      - ./src/Api/uploads:/app/uploads
