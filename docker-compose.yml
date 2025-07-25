@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     environment:
-      - ConnectionStrings__DefaultConnection=Server=host.docker.internal;Port=5432;Database=jurnee;Username=postgres;Password=qwerty-1;
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal:host-gateway;Port=5432;Database=jurnee;Username=postgres;Password=qwerty-1;
       - ASPNETCORE_ENVIRONMENT=Production
       - JwtSettings__Issuer=Issuer
       - JwtSettings__Audience=Audience
