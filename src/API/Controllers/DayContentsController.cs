@@ -1,3 +1,4 @@
+using API.Attributes;
 using API.Dtos.DayContents;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Templates.Response;
@@ -5,6 +6,7 @@ using Application.DayContents.Commands;
 using CSharpFunctionalExtensions;
 using Domain.DayContents;
 using Domain.Days;
+using Domain.SystemRoles;
 using Mediator.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,7 @@ namespace API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [CustomAuthorize(SystemRole.User)]
     public class DayContentsController(ISender sender, IBaseQuery<DayContent> dayContentQuery) : ControllerBase
     {
         [HttpGet]

@@ -1,8 +1,11 @@
+using API.Attributes;
+using API.Constants;
 using API.Dtos.Users;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Templates.Response;
 using Application.Users.Commands;
 using CSharpFunctionalExtensions;
+using Domain.SystemRoles;
 using Domain.Users;
 using Mediator.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +15,7 @@ namespace API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [CustomAuthorize(SystemRole.User)]
     public class UsersController(ISender sender, IBaseQuery<User> userQuery) : ControllerBase
     {
         [HttpGet]
@@ -27,11 +31,14 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        public async Task<Result<Success, Error>> Delete([FromQuery] Guid id, CancellationToken cancellationToken)
+        public async Task<Result<Success, Error>> Delete(CancellationToken cancellationToken)
         {
+            if (HttpContext.Items[HttpContextKeys.CurrentUser] is not User user)
+                return Error.Create(StatusCodes.Status401Unauthorized, ErrorContent.Create("Unauthorized", Error.ServerErrorsKey));
+
             var input = new DeleteUserCommand
             {
-                Id = id
+                Id = user.Id.Value
             };
 
             var result = await sender.Send(input, cancellationToken);
@@ -45,9 +52,13 @@ namespace API.Controllers
         [HttpPut]
         public async Task<Result<Success, Error>> Update([FromForm] UpdateUserDto dto, CancellationToken cancellationToken)
         {
+            if (HttpContext.Items[HttpContextKeys.CurrentUser] is not User user)
+                return Error.Create(StatusCodes.Status401Unauthorized, ErrorContent.Create("Unauthorized", Error.ServerErrorsKey));
+
             var input = new UpdateUserCommand
             {
-                Id = dto.Id,
+
+                Id = user.Id.Value,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
             };

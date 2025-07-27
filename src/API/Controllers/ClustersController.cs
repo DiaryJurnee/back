@@ -1,9 +1,11 @@
+using API.Attributes;
 using API.Dtos.Clusters;
 using Application.Clusters.Commands;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Templates.Response;
 using CSharpFunctionalExtensions;
 using Domain.Clusters;
+using Domain.SystemRoles;
 using Domain.Users;
 using Domain.Workspaces;
 using Mediator.Interfaces;
@@ -13,6 +15,7 @@ namespace API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [CustomAuthorize(SystemRole.User)]
     public class ClustersController(ISender sender, IBaseQuery<Cluster> clusterQuery) : ControllerBase
     {
         [HttpGet]

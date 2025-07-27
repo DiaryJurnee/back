@@ -1,7 +1,9 @@
+using API.Attributes;
 using API.Modules;
 using Application.Common.Templates.Response;
 using Application.Uploads.Commands;
 using CSharpFunctionalExtensions;
+using Domain.SystemRoles;
 using Mediator.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +11,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[CustomAuthorize(SystemRole.Admin)]
 public class UploadController(ISender sender) : ControllerBase
 {
     [HttpPost("[action]")]

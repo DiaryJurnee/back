@@ -1,8 +1,10 @@
+using API.Attributes;
 using API.Dtos.UsersWorkspaces;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Templates.Response;
 using Application.UsersWorkspaces.Commands;
 using CSharpFunctionalExtensions;
+using Domain.SystemRoles;
 using Domain.Users;
 using Domain.UsersWorkspaces;
 using Domain.Workspaces;
@@ -13,6 +15,7 @@ namespace API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [CustomAuthorize(SystemRole.User)]
     public class UsersWorkspacesController(ISender sender, IBaseQuery<UserWorkspace> userWorkspaceQuery) : ControllerBase
     {
         [HttpGet]

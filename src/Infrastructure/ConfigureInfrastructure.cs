@@ -22,14 +22,13 @@ public static class ConfigureInfrastructure
         services.AddRepositories();
     }
 
+    public static readonly IEnumerable<Type> entityTypes = [
+        typeof(Cluster), typeof(DayContent), typeof(Day), typeof(SystemRole),
+        typeof(Workspace), typeof(User), typeof(UserWorkspace)
+    ];
+
     private static void AddRepositories(this IServiceCollection services)
     {
-        var entityTypes = new[]
-        {
-            typeof(Cluster), typeof(DayContent), typeof(Day), typeof(SystemRole),
-            typeof(Workspace), typeof(User), typeof(UserWorkspace)
-        };
-
         foreach (var entityType in entityTypes)
         {
             var repositoryType = typeof(BaseRepository<>).MakeGenericType(entityType);
