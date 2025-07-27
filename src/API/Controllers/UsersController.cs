@@ -1,7 +1,6 @@
 using API.Attributes;
 using API.Constants;
 using API.Dtos.Users;
-using Application.Common.Interfaces.Queries;
 using Application.Common.Templates.Response;
 using Application.Users.Commands;
 using CSharpFunctionalExtensions;
@@ -9,25 +8,21 @@ using Domain.SystemRoles;
 using Domain.Users;
 using Mediator.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
     [CustomAuthorize(SystemRole.User)]
-    public class UsersController(ISender sender, IBaseQuery<User> userQuery) : ControllerBase
+    public class UsersController(ISender sender) : ControllerBase
     {
         [HttpGet]
-        public async Task<Result<Success, Error>> Get([FromQuery] Guid id, CancellationToken cancellationToken)
+        public Result<Success, Error> Get()
         {
-            var userId = UserId.New(id);
-            var user = await userQuery.Get(cancellationToken, x => x.Id == userId, x => x.Include(x => x.Role!));
+            if (HttpContext.Items[HttpContextKeys.CurrentUser] is not User user)
+                return Error.Create(StatusCodes.Status401Unauthorized, ErrorContent.Create("Unauthorized", Error.ServerErrorsKey));
 
-            return user.Match<Result<Success, Error>>(
-                user => Success.Create(StatusCodes.Status200OK, UserDto.FromDomainModel(user)),
-                () => Error.Create(StatusCodes.Status404NotFound, ErrorContent.Create("User not found", Error.ServerErrorsKey))
-            );
+            return Success.Create(StatusCodes.Status200OK, UserDto.FromDomainModel(user));
         }
 
         [HttpDelete]
